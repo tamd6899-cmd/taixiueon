@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07131b">
+<title>NEON TÀI XỈU</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;padding:12px;
+ background:#07131b;color:#f4fbff;
+ font-family:Arial,sans-serif
+}
+.app{max-width:720px;margin:auto}
+header,.row{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px
+}
+header{
+ padding:12px 2px 17px;
+ border-bottom:1px solid #294957;
+ color:#39e5dc;font-weight:bold;font-size:18px
+}
+.demo,.muted,small{color:#8ba7b4}
+.demo{font-size:10px}
+.panel{
+ background:linear-gradient(145deg,#112b38,#0a1c27);
+ border:1px solid #294957;border-radius:14px;
+ padding:15px;margin-top:13px
+}
+.balance{
+ font-size:23px;font-weight:bold;
+ color:#39e5dc;margin-top:5px
+}
+.jackpot{
+ text-align:center;
+ background:linear-gradient(100deg,#3b2b13,#172b32,#3b2b13);
+ border-color:#8e7135
+}
+.jackpot strong{
+ display:block;color:#ffd36b;
+ font-size:25px;margin-top:5px
+}
+.timer{font-size:29px;font-weight:bold;color:#ffd36b}
+.timer.lock{color:#ef526d}
+.bar{
+ height:6px;background:#233b47;
+ border-radius:8px;overflow:hidden;margin-top:9px
+}
+.fill{
+ height:100%;
+ background:linear-gradient(90deg,#28d6c2,#ffd36b);
+ width:100%
+}
+.dice{
+ display:flex;justify-content:center;
+ gap:12px;margin:20px 0 12px
+}
+.die{
+ width:62px;height:62px;
+ background:linear-gradient(145deg,#fff,#c8dce2);
+ color:#102633;border-radius:12px;
+ display:grid;place-items:center;
+ font-size:42px;box-shadow:0 7px 16px #0008
+}
+.result{
+ text-align:center;font-weight:bold;
+ font-size:19px;min-height:24px
+}
+.totals,.stats{
+ display:grid;grid-template-columns:repeat(3,1fr);
+ gap:7px;text-align:center;margin-top:13px
+}
+.totals{
+ border-top:1px solid #294957;padding-top:12px
+}
+.totals b,.stat b{
+ display:block;margin-top:5px;font-size:14px
+}
+.totals small,.stat small{font-size:9px}
+.choicegrid{
+ display:grid;grid-template-columns:1fr 1fr;gap:9px
+}
+.choice{
+ padding:15px 5px;border-radius:11px;
+ color:white;font-size:19px;font-weight:bold;
+ cursor:pointer
+}
+.choice small{
+ display:block;font-size:10px;
+ margin-top:5px;color:#d2e2e8
+}
+.tai{background:#60263a;border:1px solid #ef526d}
+.xiu{background:#10445a;border:1px solid #22b7d8}
+.active{outline:3px solid #39e5dc}
+.chips{
+ display:grid;grid-template-columns:repeat(3,1fr);
+ gap:8px;margin:12px 0
+}
+.chips button,.action{
+ padding:11px 5px;border-radius:8px;
+ border:1px solid #345867;
+ background:#173846;color:white;font-weight:bold
+}
+.chips button.active{
+ border-color:#ffd36b;color:#ffd36b
+}
+.betinfo,.stat{
+ background:#091b25;border-radius:9px;
+ padding:10px;font-size:11px
+}
+.actions{
+ display:grid;grid-template-columns:1fr 1fr;
+ gap:8px;margin-top:10px
+}
+.place{
+ background:linear-gradient(90deg,#087f9b,#19b9a9);
+ border:0
+}
+.cancel{background:#442333;border-color:#8d4058}
+.action:disabled{opacity:.4}
+.section{font-size:14px;margin:0 0 12px}
+.history{display:flex;gap:6px;flex-wrap:wrap}
+.bead{
+ width:29px;height:29px;border-radius:50%;
+ display:grid;place-items:center;
+ font-size:10px;font-weight:bold;border:2px solid
+}
+.bead.t{border-color:#ef526d;color:#ff8b9d}
+.bead.x{border-color:#25b9de;color:#68ddf4}
+.note{
+ text-align:center;font-size:10px;
+ line-height:1.5;color:#829eaa;margin:14px 4px
+}
+@media(max-width:380px){
+ .die{width:55px;height:55px;font-size:36px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+<span>🎲 NEON TÀI XỈU</span>
+<span class="demo">● DEMO XU ẢO</span>
+</header>
+
+<div class="panel row">
+<div>
+<small>SỐ DƯ CỦA BẠN</small>
+<div class="balance" id="balance">1.000.000 xu</div>
+</div>
+<div style="text-align:right">
+<small>PHIÊN</small>
+<b id="round">#001</b>
+</div>
+</div>
+
+<div class="panel jackpot">
+<small>✦ JACKPOT · HŨ THƯỞNG ẢO ✦</small>
+<strong id="jackpot">369.651.109 xu</strong>
+</div>
+
+<div class="panel">
+<div class="row">
+<b id="phase">ĐANG NHẬN CƯỢC</b>
+<div class="timer" id="timer">30</div>
+</div>
+
+<div class="bar">
+<div class="fill" id="fill"></div>
+</div>
+
+<div class="dice">
+<div class="die" id="d1">⚀</div>
+<div class="die" id="d2">⚀</div>
+<div class="die" id="d3">⚀</div>
+</div>
+
+<div class="result" id="result">CHỜ KẾT QUẢ</div>
+
+<div class="totals">
+<div>
+<small>TỔNG ĐIỂM</small>
+<b id="sum">—</b>
+</div>
+<div>
+<small>PHIÊN</small>
+<b id="round2">001</b>
+</div>
+<div>
+<small>TRẠNG THÁI</small>
+<b id="state">MỞ CƯỢC</b>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<h3 class="section">CHỌN CỬA CƯỢC</h3>
+
+<div class="choicegrid">
+<button class="choice tai" id="tai">
+▲ TÀI
+<small>11–17 điểm</small>
+</button>
+
+<button class="choice xiu" id="xiu">
+▼ XỈU
+<small>4–10 điểm</small>
+</button>
+</div>
+
+<h3 class="section" style="margin-top:17px">
+MỨC TIỀN CƯỢC
+</h3>
+
+<div class="chips">
+<button data-v="5000">5K</button>
+<button data-v="10000">10K</button>
+<button data-v="50000">50K</button>
+<button data-v="100000">100K</button>
+<button data-v="200000">200K</button>
+<button data-v="500000">500K</button>
+</div>
+
+<div class="betinfo row">
+<span>Cược của bạn: <b id="mybet">0 xu</b></span>
+<span>Cửa: <b id="mychoice">Chưa chọn</b></span>
+</div>
+
+<div class="actions">
+<button class="action place" id="place">ĐẶT CƯỢC</button>
+<button class="action cancel" id="cancel" disabled>HỦY CƯỢC</button>
+</div>
+
+<p class="muted" id="message" style="font-size:11px;text-align:center">
+Chọn cửa và mức cược trước khi hết giờ.
+</p>
+</div>
+
+<div class="panel">
+<h3 class="section">TỔNG QUAN CƯỢC PHIÊN</h3>
+
+<div class="stats">
+<div class="stat">
+<small>TỔNG CƯỢC</small>
+<b id="totalbet">0 xu</b>
+</div>
+
+<div class="stat">
+<small>SỐ NGƯỜI CƯỢC</small>
+<b id="players">0</b>
+</div>
+
+<div class="stat">
+<small>BOT ĐẶT CƯỢC</small>
+<b id="botbet">0 xu</b>
+</div>
+</div>
+
+<div class="stats">
+<div class="stat">
+<small>TÀI</small>
+<b id="taibet">0 xu</b>
+</div>
+
+<div class="stat">
+<small>XỈU</small>
+<b id="xiubet">0 xu</b>
+</div>
+
+<div class="stat">
+<small>SỐ BOT</small>
+<b id="botplayers">0</b>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<h3 class="section">LỊCH SỬ CẦU</h3>
+<div class="history" id="history">
+<span class="muted">Chưa có kết quả</span>
+</div>
+<p class="muted" style="font-size:10px">
+T = Tài · X = Xỉu
+</p>
+</div>
+
+<p class="note">
+BẢN DEMO GIẢ LẬP · Bot, số người chơi,
+tổng cược và jackpot là dữ liệu minh họa.
+Chỉ sử dụng xu ảo, không có giao dịch tiền thật.
+</p>
+
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+
+const fmt=n=>
+Math.floor(n).toLocaleString('vi-VN')+' xu';
+
+const faces=['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+let balance=1000000;
+let jackpot=369651109;
+let round=1;
+let seconds=30;
+let selected='';
+let stake=5000;
+let myBet=0;
+let mySide='';
+let locked=false;
+let phase='bet';
+let history=[];
+
+let botTotal=0;
+let botTai=0;
+let botXiu=0;
+let botPeople=0;
+let userTai=0;
+let userXiu=0;
+
+function update(){
+
+ $('balance').textContent=fmt(balance);
+ $('jackpot').textContent=fmt(jackpot);
+
+ $('round').textContent=
+ '#'+String(round).padStart(3,'0');
+
+ $('round2').textContent=
+ String(round).padStart(3,'0');
+
+ $('timer').textContent=seconds;
+
+ $('timer').classList.toggle(
+ 'lock',seconds<=5
+ );
+
+ $('fill').style.width=
+ (seconds/30*100)+'%';
+
+ $('phase').textContent=
+ locked?'ĐÃ KHÓA CƯỢC':'ĐANG NHẬN CƯỢC';
+
+ $('state').textContent=
+ locked?'KHÓA':'MỞ';
+
+ $('mybet').textContent=fmt(myBet);
+
+ $('mychoice').textContent=
+ mySide||'Chưa chọn';
+
+ $('totalbet').textContent=
+ fmt(myBet+botTotal);
+
+ $('players').textContent=
+ botPeople+(myBet?1:0);
+
+ $('botbet').textContent=fmt(botTotal);
+ $('taibet').textContent=fmt(userTai+botTai);
+ $('xiubet').textContent=fmt(userXiu+botXiu);
+ $('botplayers').textContent=botPeople;
+
+ $('place').disabled=
+ locked||phase!=='bet';
+
+ $('cancel').disabled=
+ locked||!myBet||phase!=='bet';
+}
+
+function resetRound(){
+
+ myBet=0;
+ mySide='';
+ selected='';
+
+ botTotal=0;
+ botTai=0;
+ botXiu=0;
+ botPeople=0;
+ userTai=0;
+ userXiu=0;
+
+ $('tai').classList.remove('active');
+ $('xiu').classList.remove('active');
+
+ $('message').textContent=
+ 'Chọn cửa và mức cược trước khi hết giờ.';
+
+ $('result').textContent='CHỜ KẾT QUẢ';
+ $('sum').textContent='—';
+
+ for(let i=1;i<=3;i++){
+ $('d'+i).textContent='⚀';
+ }
+
+ // BOT GIẢ LẬP
+ for(let i=0;i<10;i++){
+
+ let a=[5000,10000,50000,100000,200000,500000]
+ [Math.floor(Math.random()*6)];
+
+ botPeople++;
+ botTotal+=a;
+
+ if(Math.random()<0.5){
+ botTai+=a;
+ }else{
+ botXiu+=a;
+ }
+
+ }
+}
+
+function choose(s){
+
+ if(locked||phase!=='bet')return;
+
+ selected=s;
+
+ $('tai').classList.toggle('active',s==='TÀI');
+ $('xiu').classList.toggle('active',s==='XỈU');
+
+ $('mychoice').textContent=s;
+}
+
+$('tai').onclick=()=>choose('TÀI');
+$('xiu').onclick=()=>choose('XỈU');
+
+document.querySelectorAll('.chips button').forEach(b=>{
+
+ b.onclick=()=>{
+
+ if(locked)return;
+
+ stake=+b.dataset.v;
+
+ document.querySelectorAll('.chips button')
+ .forEach(x=>{
+ x.classList.toggle('active',x===b);
+ });
+
+ };
+
+});
+
+$('place').onclick=()=>{
+
+ if(locked)return;
+
+ if(!selected){
+ $('message').textContent='Hãy chọn Tài hoặc Xỉu.';
+ return;
+ }
+
+ if(myBet){
+ $('message').textContent=
+ 'Bạn đã đặt cược. Hãy hủy cược trước khi đổi.';
+ return;
+ }
+
+ if(balance<stake){
+ $('message').textContent='Không đủ xu ảo.';
+ return;
+ }
+
+ balance-=stake;
+ myBet=stake;
+ mySide=selected;
+
+ if(mySide==='TÀI'){
+ userTai+=stake;
+ }else{
+ userXiu+=stake;
+ }
+
+ $('message').textContent=
+ 'Đã đặt '+fmt(stake)+' vào '+mySide+'.';
+
+ update();
+};
+
+$('cancel').onclick=()=>{
+
+ if(locked||!myBet)return;
+
+ balance+=myBet;
+
+ if(mySide==='TÀI'){
+ userTai-=myBet;
+ }else{
+ userXiu-=myBet;
+ }
+
+ myBet=0;
+ mySide='';
+
+ $('message').textContent=
+ 'Đã hủy cược, xu đã hoàn lại.';
+
+ update();
+};
+
+function showHistory(){
+
+ $('history').innerHTML=
+ history.length
+ ?history.map(x=>
+ '<span class="bead '+
+ (x==='TÀI'?'t':'x')+'">'+
+ (x==='TÀI'?'T':'X')+
+ '</span>'
+ ).join('')
+ :'<span class="muted">Chưa có kết quả</span>';
+}
+
+function settle(){
+
+ phase='result';
+
+ let dice=[
+ 1+Math.floor(Math.random()*6),
+ 1+Math.floor(Math.random()*6),
+ 1+Math.floor(Math.random()*6)
+ ];
+
+ let sum=dice.reduce((a,b)=>a+b,0);
+
+ let out=sum>=11?'TÀI':'XỈU';
+
+ dice.forEach((n,i)=>{
+ $('d'+(i+1)).textContent=faces[n-1];
+ });
+
+ $('sum').textContent=sum;
+ $('result').textContent=out;
+
+ if(myBet&&mySide===out){
+
+ balance+=myBet*2;
+
+ $('message').textContent=
+ 'Bạn thắng! Nhận '+fmt(myBet*2)+'.';
+
+ }else if(myBet){
+
+ $('message').textContent=
+ 'Phiên này bạn chưa thắng.';
+
+ }else{
+
+ $('message').textContent=
+ 'Phiên đã kết thúc.';
+
+ }
+
+ history.push(out);
+
+ if(history.length>30){
+ history.shift();
+ }
+
+ showHistory();
+
+ jackpot+=Math.floor(Math.random()*5000)+500;
+
+ update();
+
+ setTimeout(()=>{
+
+ round++;
+ seconds=30;
+ locked=false;
+ phase='bet';
+
+ resetRound();
+ update();
+
+ },2500);
+}
+
+function tick(){
+
+ if(phase==='result')return;
+
+ seconds--;
+
+ if(seconds<=5&&!locked){
+
+ locked=true;
+
+ $('message').textContent=
+ 'Đã khóa cược. Đang chờ mở kết quả.';
+
+ update();
+ }
+
+ if(seconds<=0){
+
+ settle();
+ return;
+
+ }
+
+ update();
+}
+
+document.querySelector('[data-v="5000"]')
+.classList.add('active');
+
+resetRound();
+update();
+
+setInterval(tick,1000);
+
+</script>
+</body>
+</html>
