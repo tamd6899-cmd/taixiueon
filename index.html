@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEON TÀI XỈU</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#07131b;color:white;font-family:Arial;text-align:center;padding:15px}
+header{display:flex;justify-content:space-between;padding:15px 0;color:#38e5dc;font-weight:bold}
+.box{background:#102633;border:1px solid #285064;border-radius:15px;padding:18px;margin:15px 0}
+.balance{font-size:25px;font-weight:bold;color:#38e5dc;margin-top:8px}
+.round{color:#38e5dc;font-weight:bold}
+.dice{display:flex;justify-content:center;gap:12px;margin:30px 0}
+.die{background:white;color:#102633;width:75px;height:75px;border-radius:13px;display:grid;place-items:center;font-size:48px;box-shadow:0 5px 15px #0008}
+.result{font-size:22px;font-weight:bold;margin:15px}
+.choices{display:flex;gap:12px}
+button{border:0;border-radius:10px;padding:15px;color:white;font-weight:bold;font-size:16px;cursor:pointer}
+.choices button{flex:1}
+.tai{background:#a52e49}
+.xiu{background:#126080}
+.selected{outline:3px solid #38e5dc}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:15px 0}
+.chips button{background:#244653}
+.play{width:100%;background:linear-gradient(90deg,#087e9c,#20c5ae);font-size:18px;padding:17px}
+button:disabled{opacity:.4}
+#history{font-size:13px;line-height:2;color:#9fc1cc}
+.small{color:#8ba7b4;font-size:12px}
+</style>
+</head>
+<body>
+
+<header>
+<span>🎲 NEON TÀI XỈU</span>
+<span>DEMO</span>
+</header>
+
+<div class="box">
+<div class="small">SỐ DƯ XU ẢO</div>
+<div class="balance" id="balance">1.000.000</div>
+</div>
+
+<div class="box">
+<div class="round" id="round">PHIÊN #001</div>
+
+<div class="dice">
+<div class="die" id="d1">⚀</div>
+<div class="die" id="d2">⚀</div>
+<div class="die" id="d3">⚀</div>
+</div>
+
+<div class="result" id="result">CHỜ KẾT QUẢ</div>
+<div class="small" id="total">Tổng điểm: --</div>
+</div>
+
+<div class="box">
+<h3>CHỌN CỬA</h3>
+<div class="choices">
+<button class="tai" onclick="choose('TÀI',this)">▲ TÀI</button>
+<button class="xiu" onclick="choose('XỈU',this)">▼ XỈU</button>
+</div>
+
+<h3>MỨC CƯỢC</h3>
+<div class="chips">
+<button onclick="setBet(10000)">10K</button>
+<button onclick="setBet(50000)">50K</button>
+<button onclick="setBet(100000)">100K</button>
+<button onclick="setBet(500000)">500K</button>
+</div>
+
+<div id="betText" class="small">Cược: 100.000 xu</div>
+<br>
+<button class="play" id="play" onclick="play()">🎲 BẮT ĐẦU</button>
+</div>
+
+<div class="box">
+<h3>LỊCH SỬ KẾT QUẢ</h3>
+<div id="history">Chưa có phiên nào</div>
+</div>
+
+<p class="small">GAME GIẢ LẬP · KHÔNG SỬ DỤNG TIỀN THẬT</p>
+
+<script>
+let balance=1000000;
+let bet=100000;
+let choice='';
+let round=1;
+let playing=false;
+
+const faces=['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+function update(){
+ document.getElementById('balance').innerText=balance.toLocaleString('vi-VN');
+ document.getElementById('betText').innerText='Cược: '+bet.toLocaleString('vi-VN')+' xu';
+}
+
+function choose(value,btn){
+ choice=value;
+ document.querySelectorAll('.choices button').forEach(b=>b.classList.remove('selected'));
+ btn.classList.add('selected');
+}
+
+function setBet(value){
+ bet=value;
+ update();
+}
+
+function play(){
+ if(playing)return;
+ if(!choice){alert('Hãy chọn Tài hoặc Xỉu!');return}
+ if(bet>balance){alert('Không đủ xu!');return}
+
+ playing=true;
+ balance-=bet;
+ update();
+
+ let count=0;
+ const button=document.getElementById('play');
+ button.disabled=true;
+ button.innerText='ĐANG LẮC...';
+
+ const timer=setInterval(()=>{
+  for(let i=1;i<=3;i++){
+   let n=Math.floor(Math.random()*6);
+   document.getElementById('d'+i).innerText=faces[n];
+  }
+  count++;
+  if(count>=15){
+   clearInterval(timer);
+   finish();
+  }
+ },100);
+}
+
+function finish(){
+ let dice=[
+  Math.ceil(Math.random()*6),
+  Math.ceil(Math.random()*6),
+  Math.ceil(Math.random()*6)
+ ];
+ let sum=dice.reduce((a,b)=>a+b,0);
+ let result=sum>=11?'TÀI':'XỈU';
+
+ dice.forEach((n,i)=>{
+  document.getElementById('d'+(i+1)).innerText=faces[n-1];
+ });
+
+ document.getElementById('total').innerText='Tổng điểm: '+sum;
+ document.getElementById('result').innerText=result;
+
+ let win=choice===result;
+ if(win)balance+=bet*2;
+
+ document.getElementById('history').innerHTML=
+ 'Phiên #'+round+' · '+dice.join(' - ')+' · '+sum+' điểm · '+result+
+ (win?' · THẮNG':' · THUA')+'<br>'+document.getElementById('history').innerHTML;
+
+ document.getElementById('round').innerText='PHIÊN #'+String(++round).padStart(3,'0');
+ document.getElementById('play').innerText='🎲 BẮT ĐẦU';
+ document.getElementById('play').disabled=false;
+ update();
+ playing=false;
+}
+update();
+</script>
+</body>
+</html>
