@@ -1,0 +1,267 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #061018;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #193746;
+}
+
+.logo {
+    color: #36e5dc;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.demo {
+    color: #39e7b2;
+    font-size: 12px;
+}
+
+.account {
+    background: #102633;
+    border: 1px solid #245064;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 25px 0;
+}
+
+.account small {
+    color: #91aebc;
+}
+
+.account h2 {
+    margin-top: 8px;
+    font-size: 28px;
+}
+
+.account span {
+    color: #36e5dc;
+    font-size: 14px;
+}
+
+.game {
+    background: linear-gradient(145deg, #102633, #07141d);
+    border: 1px solid #244353;
+    border-radius: 18px;
+    padding: 25px;
+    text-align: center;
+}
+
+.round {
+    color: #36e5dc;
+    font-weight: bold;
+}
+
+.dice-area {
+    padding: 65px 0;
+}
+
+.dice {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.die {
+    width: 85px;
+    height: 85px;
+    background: linear-gradient(145deg, white, #b9d0da);
+    color: #102633;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    font-size: 65px;
+    box-shadow: 0 8px 25px #0008;
+}
+
+.dice-area p {
+    color: #7695a3;
+    font-size: 11px;
+    margin-top: 30px;
+    letter-spacing: 2px;
+}
+
+.result {
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #25404d;
+    padding-top: 20px;
+}
+
+.result small {
+    color: #829eaa;
+}
+
+.result h2 {
+    margin-top: 10px;
+    font-size: 17px;
+}
+
+.bet {
+    background: #102633;
+    border: 1px solid #244353;
+    border-radius: 18px;
+    padding: 25px;
+    margin-top: 20px;
+}
+
+.bet h2 {
+    font-size: 19px;
+    margin-bottom: 20px;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.buttons button {
+    width: 50%;
+    padding: 25px;
+    border-radius: 12px;
+    font-size: 23px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+}
+
+.buttons small {
+    display: block;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.tai {
+    background: linear-gradient(135deg, #702c40, #321725);
+    border: 1px solid #ff647b;
+}
+
+.xiu {
+    background: linear-gradient(135deg, #12516a, #102532);
+    border: 1px solid #35c9e5;
+}
+
+.stake {
+    background: #071721;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.stake h3 {
+    font-size: 14px;
+    color: #36e5dc;
+}
+
+.amount {
+    padding: 18px;
+    background: #102633;
+    margin: 15px 0;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.chips {
+    display: flex;
+    gap: 10px;
+}
+
+.chips button {
+    background: #173c4b;
+    color: white;
+    border: 1px solid #326071;
+    padding: 12px;
+    border-radius: 8px;
+    flex: 1;
+}
+
+.confirm {
+    width: 100%;
+    margin-top: 20px;
+    padding: 17px;
+    border: 0;
+    border-radius: 8px;
+    background: #16a9aa;
+    color: white;
+    font-weight: bold;
+}
+
+.confirm:disabled {
+    opacity: .5;
+}
+
+.history {
+    margin-top: 20px;
+    background: #102633;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.history h2 {
+    font-size: 17px;
+}
+
+.history p {
+    color: #829eaa;
+    margin-top: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #78939e;
+    font-size: 12px;
+}
+
+@media(max-width:600px) {
+    .container {
+        padding: 12px;
+    }
+
+    .logo {
+        font-size: 17px;
+    }
+
+    .die {
+        width: 65px;
+        height: 65px;
+        font-size: 48px;
+    }
+
+    .dice {
+        gap: 12px;
+    }
+
+    .buttons button {
+        padding: 20px 8px;
+        font-size: 19px;
+    }
+
+    .chips {
+        flex-wrap: wrap;
+    }
+
+    .chips button {
+        min-width: 40%;
+    }
+}
